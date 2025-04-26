@@ -87,7 +87,6 @@ QRadioButton::indicator:checked {
 
 QPushButton {
 	background:  #a6da95;
-	height: 32px;
 	color: #4c4f69;
 	border-radius: 12px;
 	padding: 10px;
@@ -125,6 +124,16 @@ QMenu::separator {
     height: 1px;
     background-color: #555555;
     margin: 5px 10px;
+}
+
+QLineEdit {
+	padding: 6px;
+	border-radius: 6px;
+	background:  #363a4f;
+}
+
+QListWidget {
+	padding: 10px;
 }</string>
   </property>
   <widget class="QWidget" name="centralwidget">
@@ -177,6 +186,34 @@ QMenu::separator {
           </property>
           <property name="text">
            <string>New Task</string>
+          </property>
+         </widget>
+         <widget class="QPushButton" name="deleteTaskButton">
+          <property name="enabled">
+           <bool>true</bool>
+          </property>
+          <property name="geometry">
+           <rect>
+            <x>900</x>
+            <y>500</y>
+            <width>107</width>
+            <height>52</height>
+           </rect>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">QPushButton {
+	background-color: rgb(237, 135, 150);
+}
+
+QPushButton:hover {
+	background-color:  #d20f39;
+}</string>
+          </property>
+          <property name="text">
+           <string>Delete Task</string>
+          </property>
+          <property name="flat">
+           <bool>false</bool>
           </property>
          </widget>
         </widget>
