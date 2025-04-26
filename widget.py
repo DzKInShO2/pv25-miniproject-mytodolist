@@ -2,35 +2,38 @@ from PyQt5 import uic
 from PyQt5.QtWidgets import (
     QApplication,
     QMainWindow,
-    QMessageBox
 )
 
 
 class MynWindow(QMainWindow):
     def __init__(self):
         super().__init__()
-        uic.loadUi("app.ui", self)
+        uic.loadUi("ui/app.ui", self)
 
-        self.__createComponents()
-        self.__setupCallbacks()
+        self._createComponents()
+        self._setupCallbacks()
 
-    def __createComponents(self):
-        self.aboutBox = QMessageBox()
-        self.aboutBox.setWindowTitle("About Application")
-        self.aboutBox.setIcon(QMessageBox.Icon.Information)
-        self.aboutBox.setStandardButtons(QMessageBox.StandardButton.Close)
+    def _createComponents(self):
+        pass
 
-    def __setupCallbacks(self):
-        self.actionAbout.triggered.connect(lambda: self.__aboutMessage())
+    def _setupCallbacks(self):
         self.actionExit.triggered.connect(lambda: self.close())
 
-    def __aboutMessage(self):
-        self.aboutBox.exec()
+        self.taskSection.toggled.connect(self._onSectionChanged)
+        self.reminderSection.toggled.connect(self._onSectionChanged)
+
+    def _onSectionChanged(self, checked):
+        sender = self.sender()
+
+        if checked:
+            if sender is self.taskSection:
+                self.contentStack.setCurrentIndex(0)
+            elif sender is self.reminderSection:
+                self.contentStack.setCurrentIndex(1)
 
 
 if __name__ == "__main__":
     app = QApplication([])
-
     win = MynWindow()
     win.show()
     app.exec()
