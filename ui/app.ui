@@ -134,6 +134,19 @@ QLineEdit {
 
 QListWidget {
 	padding: 10px;
+}
+
+QListWidget::item {
+    margin: 5px;
+    padding: 8px;
+    border-radius: 5px;
+	background-color: #363a4f;
+}
+QListWidget::item:selected {
+    background-color: #5b6078;
+}
+QListWidget::item:hover {
+    color: #b7bdf8;
 }</string>
   </property>
   <widget class="QWidget" name="centralwidget">
@@ -218,22 +231,12 @@ QPushButton:hover {
          </widget>
         </widget>
         <widget class="QWidget" name="reminderPage">
-         <widget class="QListWidget" name="reminderList">
-          <property name="geometry">
-           <rect>
-            <x>0</x>
-            <y>0</y>
-            <width>1021</width>
-            <height>661</height>
-           </rect>
-          </property>
-         </widget>
          <widget class="QPushButton" name="newReminderButton">
           <property name="geometry">
            <rect>
-            <x>900</x>
+            <x>886</x>
             <y>580</y>
-            <width>107</width>
+            <width>121</width>
             <height>52</height>
            </rect>
           </property>
@@ -241,6 +244,42 @@ QPushButton:hover {
            <string>New Reminder</string>
           </property>
          </widget>
+         <widget class="QWidget" name="verticalLayoutWidget_3">
+          <property name="geometry">
+           <rect>
+            <x>-1</x>
+            <y>-1</y>
+            <width>1031</width>
+            <height>661</height>
+           </rect>
+          </property>
+          <layout class="QVBoxLayout" name="reminderList"/>
+         </widget>
+         <widget class="QPushButton" name="deleteReminderButton">
+          <property name="geometry">
+           <rect>
+            <x>886</x>
+            <y>500</y>
+            <width>121</width>
+            <height>52</height>
+           </rect>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">QPushButton {
+	background-color: rgb(237, 135, 150);
+}
+
+QPushButton:hover {
+	background-color:  #d20f39;
+}</string>
+          </property>
+          <property name="text">
+           <string>Delete Reminder</string>
+          </property>
+         </widget>
+         <zorder>verticalLayoutWidget_3</zorder>
+         <zorder>deleteReminderButton</zorder>
+         <zorder>newReminderButton</zorder>
         </widget>
        </widget>
       </item>
