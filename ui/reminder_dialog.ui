@@ -50,13 +50,42 @@ QDialogButtonBox QPushButton {
 QDialogButtonBox QPushButton:hover {
 	background:  #40a02b;
 	color: #babbf1;
+}
+
+QLineEdit {
+	background-color: #363a4f;
+	border-radius: 8px;
+	margin-bottom: 6px;
+}
+
+QComboBox {
+	background-color: #363a4f;
+	padding: 10px;
+	border-radius: 8px;
+	margin-bottom: 6px;
+}
+
+QComboBox QAbstractItemView {
+	background-color: #494d64;
+	color:  #cad3f5;
+	selection-background-color: #8bd5ca; 
+	selection-color: #4c4f69;
+	border: 2px solid #8087a2;
+	border-radius: 8px;
+}
+
+QSpinBox {
+	background-color: #363a4f;
+	padding: 10px;
+	border-radius: 8px;
+	margin-bottom: 6px;
 }</string>
   </property>
   <widget class="QDialogButtonBox" name="buttonBox">
    <property name="geometry">
     <rect>
      <x>90</x>
-     <y>160</y>
+     <y>170</y>
      <width>341</width>
      <height>71</height>
     </rect>
@@ -74,7 +103,7 @@ QDialogButtonBox QPushButton:hover {
      <x>10</x>
      <y>10</y>
      <width>501</width>
-     <height>131</height>
+     <height>151</height>
     </rect>
    </property>
    <property name="styleSheet">
@@ -86,7 +115,7 @@ QDialogButtonBox QPushButton:hover {
       <x>0</x>
       <y>0</y>
       <width>501</width>
-      <height>125</height>
+      <height>143</height>
      </rect>
     </property>
     <layout class="QFormLayout" name="formLayout">

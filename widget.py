@@ -6,6 +6,7 @@ from PyQt5.QtWidgets import (
     QInputDialog,
     QDialog,
     QListWidgetItem,
+    QMessageBox,
 )
 
 
@@ -13,6 +14,18 @@ class ReminderDialog(QDialog):
     def __init__(self):
         super().__init__()
         uic.loadUi("ui/reminder_dialog.ui", self)
+
+    def getData(self) -> dict:
+        return {
+            "title": self.titleLineEdit.text(),
+            "month": self.monthComboBox.currentText(),
+            "date":  self.dateSpinBox.value()
+        }
+
+    def setData(self, data: dict) -> None:
+        self.titleLineEdit.setText(data["title"])
+        self.monthComboBox.setCurrentText(data["month"])
+        self.dateSpinBox.setValue(data["date"])
 
 
 class MynWindow(QMainWindow):
@@ -40,10 +53,17 @@ class MynWindow(QMainWindow):
         self.newTaskButton.pressed.connect(self._onNewTaskPressed)
         self.deleteTaskButton.pressed.connect(self._onDeleteTaskButtonPressed)
 
-        self.taskList.itemSelectionChanged.connect(self._onTaskSelectionChange)
-        self.taskList.itemDoubleClicked.connect(self._onItemDoubleClicked)
-
         self.newReminderButton.pressed.connect(self._onNewReminderPressed)
+        self.deleteReminderButton.pressed.connect(
+            self._onDeleteReminderButtonPressed)
+
+        self.taskList.itemSelectionChanged.connect(self._onTaskSelectionChange)
+        self.taskList.itemDoubleClicked.connect(self._onTaskDoubleClicked)
+
+        self.reminderList.itemDoubleClicked.connect(
+            self._onReminderDoubleClicked)
+        self.reminderList.itemSelectionChanged.connect(
+            self._onReminderSelectionChange)
 
     def _onNewTaskPressed(self):
         task, ok = QInputDialog().getText(self, "New Task", "Task: ")
@@ -57,9 +77,23 @@ class MynWindow(QMainWindow):
 
     def _onNewReminderPressed(self):
         dialog = ReminderDialog()
+        while True:
+            status = dialog.exec()
+            if status == QDialog.Accepted:
+                data = dialog.getData()
+                if data["title"] != "" and data["month"][0] != "-":
+                    text = f"{data["title"]}\n{data["month"]} {data["date"]}"
+                    item = QListWidgetItem(text)
+                    self.reminderList.addItem(item)
+                    break
 
-        if dialog.exec() == QDialog.Accepted:
-            pass
+                msg = QMessageBox()
+                msg.setIcon(QMessageBox.Icon.Warning)
+                msg.setWindowTitle("Error! Invalid Data!")
+                msg.setText("The data you've entered is invalid!")
+                msg.exec()
+            elif status == QDialog.Rejected:
+                break
 
     def _onSectionChanged(self, checked):
         sender = self.sender()
@@ -72,17 +106,52 @@ class MynWindow(QMainWindow):
 
     def _onTaskSelectionChange(self):
         if not self.taskList.selectedItems():
-
             return
 
         self.deleteTaskButton.show()
 
-    def _onItemDoubleClicked(self, item):
+    def _onReminderSelectionChange(self):
+        if not self.reminderList.selectedItems():
+            return
+
+        self.deleteReminderButton.show()
+
+    def _onTaskDoubleClicked(self, item):
         newText, ok = QInputDialog().getText(self, "Edit Task", "Task: ",
                                              text=item.text())
 
         if ok:
             item.setText(newText)
+
+    def _onReminderDoubleClicked(self, item):
+        title = item.text().split("\n")
+
+        time = title[1].split(" ")
+        title = title[0]
+
+        dialog = ReminderDialog()
+        dialog.setData({
+            "title": title,
+            "month": time[0],
+            "date": int(time[1])
+        })
+
+        while True:
+            status = dialog.exec()
+            if status == QDialog.Accepted:
+                data = dialog.getData()
+                if data["title"] != "" and data["month"][0] != "-":
+                    text = f"{data["title"]}\n{data["month"]} {data["date"]}"
+                    item.setText(text)
+                    break
+
+                msg = QMessageBox()
+                msg.setIcon(QMessageBox.Icon.Warning)
+                msg.setWindowTitle("Error! Invalid Data!")
+                msg.setText("The data you've entered is invalid!")
+                msg.exec()
+            elif status == QDialog.Rejected:
+                break
 
     def _onDeleteTaskButtonPressed(self):
         items = self.taskList.selectedItems()
@@ -91,6 +160,14 @@ class MynWindow(QMainWindow):
 
         self.deleteTaskButton.hide()
         self.taskList.clearSelection()
+
+    def _onDeleteReminderButtonPressed(self):
+        items = self.reminderList.selectedItems()
+        for item in items:
+            self.reminderList.takeItem(self.reminderList.row(item))
+
+        self.deleteReminderButton.hide()
+        self.reminderList.clearSelection()
 
 
 if __name__ == "__main__":

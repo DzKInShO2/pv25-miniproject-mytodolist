@@ -244,17 +244,6 @@ QPushButton:hover {
            <string>New Reminder</string>
           </property>
          </widget>
-         <widget class="QWidget" name="verticalLayoutWidget_3">
-          <property name="geometry">
-           <rect>
-            <x>-1</x>
-            <y>-1</y>
-            <width>1031</width>
-            <height>661</height>
-           </rect>
-          </property>
-          <layout class="QVBoxLayout" name="reminderList"/>
-         </widget>
          <widget class="QPushButton" name="deleteReminderButton">
           <property name="geometry">
            <rect>
@@ -277,7 +266,17 @@ QPushButton:hover {
            <string>Delete Reminder</string>
           </property>
          </widget>
-         <zorder>verticalLayoutWidget_3</zorder>
+         <widget class="QListWidget" name="reminderList">
+          <property name="geometry">
+           <rect>
+            <x>5</x>
+            <y>1</y>
+            <width>1021</width>
+            <height>651</height>
+           </rect>
+          </property>
+         </widget>
+         <zorder>reminderList</zorder>
          <zorder>deleteReminderButton</zorder>
          <zorder>newReminderButton</zorder>
         </widget>
