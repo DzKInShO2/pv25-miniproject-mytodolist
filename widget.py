@@ -1,3 +1,5 @@
+import json
+
 from PyQt5 import uic
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import (
@@ -7,7 +9,16 @@ from PyQt5.QtWidgets import (
     QDialog,
     QListWidgetItem,
     QMessageBox,
+    QFileDialog
 )
+
+
+def extractDataFromReminderItem(reminderItem) -> tuple:
+    title = reminderItem.text().split("\n")
+    time = title[1].split(" ")
+    title = title[0]
+
+    return (title, time[0], int(time[1]))
 
 
 class ReminderDialog(QDialog):
@@ -45,6 +56,8 @@ class MynWindow(QMainWindow):
         self.deleteReminderButton.hide()
 
     def _setupCallbacks(self):
+        self.actionOpen.triggered.connect(self._onOpenTriggered)
+        self.actionSave.triggered.connect(self._onSaveTriggered)
         self.actionExit.triggered.connect(lambda: self.close())
 
         self.taskSection.toggled.connect(self._onSectionChanged)
@@ -64,6 +77,61 @@ class MynWindow(QMainWindow):
             self._onReminderDoubleClicked)
         self.reminderList.itemSelectionChanged.connect(
             self._onReminderSelectionChange)
+
+    def _onOpenTriggered(self):
+        file_path, _ = QFileDialog.getOpenFileName(
+            None, "Open JDT File", "", "JDT Files (*.jdt);; All Files (*)")
+
+        if file_path:
+            with open(file_path, "r") as f:
+                data = json.load(f)
+
+                for task in data["taskList"]:
+                    item = QListWidgetItem(task["title"])
+                    item.setFlags(item.flags() | Qt.ItemIsUserCheckable)
+                    item.setCheckState(Qt.Checked if task["checked"] else Qt.Unchecked)
+
+                    self.taskList.addItem(item)
+
+                for reminder in data["reminderList"]:
+                    item = QListWidgetItem(f"{reminder["title"]}\n{reminder["month"]} {reminder["date"]}")
+                    self.reminderList.addItem(item)
+
+    def _onSaveTriggered(self):
+        file_path, _ = QFileDialog.getSaveFileName(
+            None, "Open JDT File", "", "JDT Files (*.jdt);; All Files (*)")
+        if file_path:
+            if not file_path.endswith(".jdt"):
+                file_path += ".jdt"
+
+            taskItems: list = []
+
+            for i in range(self.taskList.count()):
+                item = self.taskList.item(i)
+
+                taskItems.append({
+                    "checked": item.checkState() == Qt.CheckState.Checked,
+                    "title": item.text()
+                })
+
+            reminderItems: list = []
+            for i in range(self.reminderList.count()):
+                item = self.reminderList.item(i)
+                title, month, date = extractDataFromReminderItem(item)
+
+                reminderItems.append({
+                    "title": title,
+                    "month": month,
+                    "date": date
+                })
+
+            data = {
+                "taskList": taskItems,
+                "reminderList": reminderItems
+            }
+
+            with open(file_path, "w") as f:
+                json.dump(data, f)
 
     def _onNewTaskPressed(self):
         task, ok = QInputDialog().getText(self, "New Task", "Task: ")
@@ -124,16 +192,13 @@ class MynWindow(QMainWindow):
             item.setText(newText)
 
     def _onReminderDoubleClicked(self, item):
-        title = item.text().split("\n")
-
-        time = title[1].split(" ")
-        title = title[0]
+        title, month, date = extractDataFromReminderItem(item)
 
         dialog = ReminderDialog()
         dialog.setData({
             "title": title,
-            "month": time[0],
-            "date": int(time[1])
+            "month": month,
+            "date": date
         })
 
         while True:
