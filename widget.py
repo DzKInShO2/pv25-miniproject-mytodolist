@@ -82,7 +82,8 @@ class MynWindow(QMainWindow):
         self.actionExit.triggered.connect(lambda: self.close())
 
         self.actionAboutApp.triggered.connect(lambda: self.aboutAppMsg.show())
-        self.actionAboutCreator.triggered.connect(lambda: self.aboutCreator.show())
+        self.actionAboutCreator.triggered.connect(
+            lambda: self.aboutCreator.show())
 
         self.taskSection.toggled.connect(self._onSectionChanged)
         self.reminderSection.toggled.connect(self._onSectionChanged)
@@ -113,12 +114,14 @@ class MynWindow(QMainWindow):
                 for task in data["taskList"]:
                     item = QListWidgetItem(task["title"])
                     item.setFlags(item.flags() | Qt.ItemIsUserCheckable)
-                    item.setCheckState(Qt.Checked if task["checked"] else Qt.Unchecked)
+                    item.setCheckState(
+                        Qt.Checked if task["checked"] else Qt.Unchecked)
 
                     self.taskList.addItem(item)
 
                 for reminder in data["reminderList"]:
-                    item = QListWidgetItem(f"{reminder["title"]}\n{reminder["month"]} {reminder["date"]}")
+                    item = QListWidgetItem(f"{reminder["title"]}\n{
+                                           reminder["month"]} {reminder["date"]}")
                     self.reminderList.addItem(item)
 
     def _onSaveTriggered(self):
