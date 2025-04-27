@@ -368,8 +368,8 @@ QPushButton:hover {
     <property name="title">
      <string>Help</string>
     </property>
-    <addaction name="actionAbout_Creator"/>
-    <addaction name="actionAbout"/>
+    <addaction name="actionAboutCreator"/>
+    <addaction name="actionAboutApp"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuHelp"/>
@@ -379,7 +379,7 @@ QPushButton:hover {
     <bool>true</bool>
    </property>
   </widget>
-  <action name="actionAbout">
+  <action name="actionAboutApp">
    <property name="text">
     <string>About App</string>
    </property>
@@ -399,7 +399,7 @@ QPushButton:hover {
     <string>Exit</string>
    </property>
   </action>
-  <action name="actionAbout_Creator">
+  <action name="actionAboutCreator">
    <property name="text">
     <string>About Creator</string>
    </property>

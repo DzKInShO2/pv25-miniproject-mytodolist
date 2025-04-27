@@ -9,7 +9,10 @@ from PyQt5.QtWidgets import (
     QDialog,
     QListWidgetItem,
     QMessageBox,
-    QFileDialog
+    QFileDialog,
+    QWidget,
+    QVBoxLayout,
+    QLabel
 )
 
 
@@ -49,16 +52,37 @@ class MynWindow(QMainWindow):
         self._setupCallbacks()
 
     def _createComponents(self):
-        pass
+        self.invalidMsg = QMessageBox()
+        self.aboutAppMsg = QMessageBox()
+
+        self.aboutCreator = QWidget()
 
     def _configureComponents(self):
         self.deleteTaskButton.hide()
         self.deleteReminderButton.hide()
 
+        self.invalidMsg.setIcon(QMessageBox.Icon.Warning)
+        self.invalidMsg.setWindowTitle("Error! Invalid Data!")
+        self.invalidMsg.setText("The data you've entered is invalid!")
+
+        self.aboutAppMsg.setIcon(QMessageBox.Icon.Information)
+        self.aboutAppMsg.setWindowTitle("About App")
+        self.aboutAppMsg.setText("Just Do It v0.0.1")
+
+        creatorLayout = QVBoxLayout()
+        creatorLayout.addWidget(QLabel("Dzakanov Inshoofi"))
+        creatorLayout.addWidget(QLabel("F1D02310110"))
+        self.aboutCreator.setLayout(creatorLayout)
+        self.aboutCreator.setWindowTitle("About Creator")
+        self.aboutCreator.setFixedSize(128, 72)
+
     def _setupCallbacks(self):
         self.actionOpen.triggered.connect(self._onOpenTriggered)
         self.actionSave.triggered.connect(self._onSaveTriggered)
         self.actionExit.triggered.connect(lambda: self.close())
+
+        self.actionAboutApp.triggered.connect(lambda: self.aboutAppMsg.show())
+        self.actionAboutCreator.triggered.connect(lambda: self.aboutCreator.show())
 
         self.taskSection.toggled.connect(self._onSectionChanged)
         self.reminderSection.toggled.connect(self._onSectionChanged)
@@ -155,11 +179,7 @@ class MynWindow(QMainWindow):
                     self.reminderList.addItem(item)
                     break
 
-                msg = QMessageBox()
-                msg.setIcon(QMessageBox.Icon.Warning)
-                msg.setWindowTitle("Error! Invalid Data!")
-                msg.setText("The data you've entered is invalid!")
-                msg.exec()
+                self.invalidMsg.exec()
             elif status == QDialog.Rejected:
                 break
 
@@ -210,11 +230,7 @@ class MynWindow(QMainWindow):
                     item.setText(text)
                     break
 
-                msg = QMessageBox()
-                msg.setIcon(QMessageBox.Icon.Warning)
-                msg.setWindowTitle("Error! Invalid Data!")
-                msg.setText("The data you've entered is invalid!")
-                msg.exec()
+                self.invalidMsg.exec()
             elif status == QDialog.Rejected:
                 break
 
